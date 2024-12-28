@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import AppRoutes from "./routes/AppRoutes";
+import { APP_NAME } from "./utils/constants";
+import "./App.css"; // Import the CSS file
 
 function App() {
+  const [userRole, setUserRole] = useState(null);
+
+  const handleLogin = (role) => setUserRole(role);
+  const handleLogout = () => setUserRole(null);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="app-container">
+        <Navbar
+          appName={APP_NAME}
+          userRole={userRole}
+          handleLogout={handleLogout}
+        />
+        <div className="content">
+          <AppRoutes userRole={userRole} handleLogin={handleLogin} />
+        </div>
+        <Footer appName={APP_NAME} />
+      </div>
+    </Router>
   );
 }
 
