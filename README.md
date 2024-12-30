@@ -1,1 +1,1 @@
-# ClassSmart
+# EduConnect
