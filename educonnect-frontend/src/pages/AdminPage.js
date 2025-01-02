@@ -37,7 +37,7 @@ const AdminPage = () => {
   useEffect(() => {
     // Fetch users from the backend on page load
     axios
-      .get("http://localhost:5000/api/users")
+      .get("http://localhost:5000/api/admin/users")
       .then((response) => {
         setUsers(response.data);
       })
@@ -49,13 +49,10 @@ const AdminPage = () => {
   const handleRegister = () => {
     if (username && password && userType && email) {
       const newUser = { email, username, password, role: userType };
-
-      // Log the data being sent
-      console.log("Registering user:", newUser);
-
       axios
-        .post("http://localhost:5000/api/register", newUser)
+        .post("http://localhost:5000/api/admin/register", newUser)
         .then((response) => {
+          // Update the users list after successful registration
           setUsers([...users, newUser]);
           setUsername("");
           setPassword("");
@@ -64,7 +61,6 @@ const AdminPage = () => {
           setSnackbarOpen(true);
         })
         .catch((error) => {
-          console.error("Registration error:", error);
           setErrorSnackbarOpen(true);
         });
     }
@@ -72,7 +68,9 @@ const AdminPage = () => {
 
   const handleDelete = (emailToDelete) => {
     axios
-      .delete(`http://localhost:5000/api/users/${emailToDelete}`)
+      .delete("http://localhost:5000/api/admin/user", {
+        data: { email: emailToDelete },
+      }) // Send email in the request body
       .then((response) => {
         setUsers(users.filter((user) => user.email !== emailToDelete));
       })
@@ -134,7 +132,13 @@ const AdminPage = () => {
           variant={activeSection === "register" ? "contained" : "outlined"}
           color="secondary"
           onClick={() => handleSectionChange("register")}
-          sx={{ marginRight: "0.5rem", width: "100px", fontSize: "0.8rem" }}
+          sx={{
+            marginRight: "0.5rem",
+            width: "100px",
+            fontSize: "0.8rem",
+            background:
+              "linear-gradient(to bottom, rgba(37, 17, 80, 0.9), rgba(50, 41, 68, 0.8))",
+          }}
         >
           Register
         </Button>
@@ -142,7 +146,13 @@ const AdminPage = () => {
           variant={activeSection === "teacher" ? "contained" : "outlined"}
           color="secondary"
           onClick={() => handleSectionChange("teacher")}
-          sx={{ marginRight: "1rem", width: "130px", fontSize: "0.8rem" }}
+          sx={{
+            marginRight: "1rem",
+            width: "130px",
+            fontSize: "0.8rem",
+            background:
+              "linear-gradient(to bottom, rgba(37, 17, 80, 0.9), rgba(50, 41, 68, 0.8))",
+          }}
         >
           Teacher Records
         </Button>
@@ -150,7 +160,12 @@ const AdminPage = () => {
           variant={activeSection === "student" ? "contained" : "outlined"}
           color="secondary"
           onClick={() => handleSectionChange("student")}
-          sx={{ width: "130px", fontSize: "0.8rem" }}
+          sx={{
+            width: "130px",
+            fontSize: "0.8rem",
+            background:
+              "linear-gradient(to bottom, rgba(37, 17, 80, 0.9), rgba(50, 41, 68, 0.8))",
+          }}
         >
           Student Records
         </Button>
@@ -172,16 +187,77 @@ const AdminPage = () => {
           margin="normal"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          InputLabelProps={{
+            style: { color: "white" }, // Change label color
+          }}
+          sx={{
+            "& fieldset": {
+              borderColor: "white",
+            },
+            "& .MuiOutlinedInput-root": {
+              "&.Mui-focused fieldset": {
+                borderColor: "white",
+              },
+              "&:hover fieldset": {
+                borderColor: "white",
+              },
+            },
+            "& .MuiOutlinedInput-input": {
+              color: "white", // Text color of the input
+            },
+          }}
         />
-        <FormControl fullWidth margin="normal">
-          <InputLabel>User Type</InputLabel>
+        <FormControl
+          fullWidth
+          margin="normal"
+          sx={{
+            "& .MuiInputLabel-root": {
+              color: "white", // Label color
+              "&.Mui-focused": {
+                color: "white", // Label color on focus
+              },
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "white", // Default border color
+              },
+              "&:hover fieldset": {
+                borderColor: "white", // Border color on hover
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "white", // Border color on focus
+              },
+              "& input": {
+                color: "white", // Input text color
+              },
+            },
+            "& .MuiSvgIcon-root": {
+              color: "white", // Dropdown arrow color
+            },
+          }}
+        >
+          <InputLabel
+            id="user-type-label"
+            sx={{
+              color: "white",
+            }}
+          >
+            User Type
+          </InputLabel>
           <Select
+            labelId="user-type-label"
             value={userType}
             onChange={(e) => setUserType(e.target.value)}
             label="User Type"
+            sx={{
+              "& .MuiOutlinedInput-input": {
+                color: "white", // Text color of the input
+              },
+            }}
           >
             <MenuItem value="student">Student</MenuItem>
             <MenuItem value="teacher">Teacher</MenuItem>
+            {/* <MenuItem value="admin">Admin</MenuItem> */}
           </Select>
         </FormControl>
         <TextField
@@ -191,6 +267,25 @@ const AdminPage = () => {
           margin="normal"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          InputLabelProps={{
+            style: { color: "white" }, // Change label color
+          }}
+          sx={{
+            "& fieldset": {
+              borderColor: "white",
+            },
+            "& .MuiOutlinedInput-root": {
+              "&.Mui-focused fieldset": {
+                borderColor: "white",
+              },
+              "&:hover fieldset": {
+                borderColor: "white",
+              },
+            },
+            "& .MuiOutlinedInput-input": {
+              color: "white", // Text color of the input
+            },
+          }}
         />
         <TextField
           label="Password"
@@ -207,12 +302,35 @@ const AdminPage = () => {
               </IconButton>
             ),
           }}
+          InputLabelProps={{
+            style: { color: "white" }, // Change label color
+          }}
+          sx={{
+            "& fieldset": {
+              borderColor: "white",
+            },
+            "& .MuiOutlinedInput-root": {
+              "&.Mui-focused fieldset": {
+                borderColor: "white",
+              },
+              "&:hover fieldset": {
+                borderColor: "white",
+              },
+            },
+            "& .MuiOutlinedInput-input": {
+              color: "white", // Text color of the input
+            },
+          }}
         />
         <Button
           onClick={handleRegister}
           variant="contained"
           color="primary"
           fullWidth
+          sx={{
+            background:
+              "linear-gradient(to bottom, rgba(37, 17, 80, 0.9), rgba(50, 41, 68, 0.9))",
+          }}
         >
           Register User
         </Button>
@@ -257,6 +375,7 @@ const AdminPage = () => {
               <TableRow>
                 <TableCell>Email</TableCell>
                 <TableCell>Username</TableCell>
+                <TableCell>Password</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -265,6 +384,7 @@ const AdminPage = () => {
                 <TableRow key={user.email}>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.username}</TableCell>
+                  <TableCell>{user.password}</TableCell>
                   <TableCell>
                     <Button
                       variant="contained"
@@ -296,6 +416,7 @@ const AdminPage = () => {
               <TableRow>
                 <TableCell>Email</TableCell>
                 <TableCell>Username</TableCell>
+                <TableCell>Password</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -304,6 +425,7 @@ const AdminPage = () => {
                 <TableRow key={user.email}>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.username}</TableCell>
+                  <TableCell>{user.password}</TableCell>
                   <TableCell>
                     <Button
                       variant="contained"

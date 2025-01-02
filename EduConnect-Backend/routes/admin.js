@@ -3,7 +3,7 @@ const User = require("../models/User");
 const router = express.Router();
 
 // Register User
-router.post("/api/register", async (req, res) => {
+router.post("/register", async (req, res) => {
   const { email, role, username, password } = req.body;
   try {
     // Check if user already exists
@@ -34,8 +34,8 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// Delete User by Email
-router.delete("/users", async (req, res) => {
+//Delete User by Email
+router.delete("/user", async (req, res) => {
   const { email } = req.body; // Email passed in the request body
   try {
     const deletedUser = await User.findOneAndDelete({ email });
