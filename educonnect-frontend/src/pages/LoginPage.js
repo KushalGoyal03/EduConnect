@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Container,
   Box,
+  InputAdornment,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -31,7 +32,6 @@ const LoginPage = ({ handleLogin }) => {
     setIsLoading(true);
 
     try {
-      // Replace with your backend API URL
       const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: {
@@ -47,7 +47,6 @@ const LoginPage = ({ handleLogin }) => {
 
       const data = await response.json();
 
-      // Handle the role-based navigation
       handleLogin(data.role);
 
       if (data.role === "admin") {
@@ -79,10 +78,23 @@ const LoginPage = ({ handleLogin }) => {
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+        padding: "2rem",
       }}
     >
-      <Typography variant="h4" component="h1" gutterBottom>
-        Admin Login
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        sx={{
+          marginBottom: "1rem",
+          fontWeight: "bold",
+          color: "white",
+          padding: 0,
+          marginTop: "-150px",
+        }}
+      >
+        Login Page
       </Typography>
 
       <Box
@@ -91,7 +103,7 @@ const LoginPage = ({ handleLogin }) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: "100%",
+          width: "80%",
           gap: 2,
         }}
       >
@@ -103,6 +115,28 @@ const LoginPage = ({ handleLogin }) => {
           onChange={(e) => setEmail(e.target.value)}
           error={!!errorMessage && !email}
           helperText={errorMessage && !email ? "Email is required." : ""}
+          InputLabelProps={{
+            style: { color: "white" }, // Change label color
+          }}
+          sx={{
+            "& fieldset": {
+              borderColor: "white",
+            },
+            "& .MuiOutlinedInput-root": {
+              "&.Mui-focused fieldset": {
+                borderColor: "white",
+              },
+              "&:hover fieldset": {
+                borderColor: "white",
+              },
+            },
+            "& .MuiOutlinedInput-input": {
+              color: "white", // Text color of the input
+            },
+            // "& .MuiFormLabel-root.Mui-focused": {
+            //   color: "#007bff", // Change label color when focused
+            // },
+          }}
         />
 
         <TextField
@@ -114,15 +148,43 @@ const LoginPage = ({ handleLogin }) => {
           onChange={(e) => setPassword(e.target.value)}
           error={!!errorMessage && !password}
           helperText={errorMessage && !password ? "Password is required." : ""}
-          InputProps={{
-            endAdornment: (
-              <IconButton
-                onClick={togglePasswordVisibility}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={togglePasswordVisibility}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+          InputLabelProps={{
+            style: { color: "white" }, // Change label color
+          }}
+          sx={{
+            "& fieldset": {
+              borderColor: "white",
+            },
+            "& .MuiOutlinedInput-root": {
+              "&.Mui-focused fieldset": {
+                borderColor: "white",
+              },
+              "&:hover fieldset": {
+                borderColor: "white",
+              },
+            },
+            "& .MuiOutlinedInput-input": {
+              color: "white", // Text color of the input
+            },
+            // "& .MuiFormLabel-root.Mui-focused": {
+            //   color: "#007bff", // Change label color when focused
+            // },
           }}
         />
 
@@ -142,6 +204,14 @@ const LoginPage = ({ handleLogin }) => {
           color="primary"
           fullWidth
           disabled={isLoading}
+          sx={{
+            backgroundColor: "#007bff",
+            "&:hover": {
+              backgroundColor: "#0056b3",
+            },
+            borderRadius: "6px",
+            height: "3rem",
+          }}
         >
           {isLoading ? <CircularProgress size={24} /> : "Login"}
         </Button>
@@ -151,6 +221,160 @@ const LoginPage = ({ handleLogin }) => {
 };
 
 export default LoginPage;
+
+// import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import {
+//   TextField,
+//   Button,
+//   IconButton,
+//   Typography,
+//   CircularProgress,
+//   Container,
+//   Box,
+// } from "@mui/material";
+// import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+// const LoginPage = ({ handleLogin }) => {
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [errorMessage, setErrorMessage] = useState("");
+//   const [isLoading, setIsLoading] = useState(false);
+//   const navigate = useNavigate();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     if (!email || !password) {
+//       setErrorMessage("Both email and password are required.");
+//       return;
+//     }
+
+//     setErrorMessage("");
+//     setIsLoading(true);
+
+//     try {
+//       // Replace with your backend API URL
+//       const response = await fetch("http://localhost:5000/api/auth/login", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ email, password }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         throw new Error(errorData.message);
+//       }
+
+//       const data = await response.json();
+
+//       // Handle the role-based navigation
+//       handleLogin(data.role);
+
+//       if (data.role === "admin") {
+//         navigate("/admin");
+//       } else if (data.role === "teacher") {
+//         navigate("/teacher");
+//       } else if (data.role === "student") {
+//         navigate("/student");
+//       } else {
+//         setErrorMessage("Invalid user role.");
+//       }
+//     } catch (error) {
+//       setErrorMessage(error.message);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   const togglePasswordVisibility = () => {
+//     setShowPassword(!showPassword);
+//   };
+
+//   return (
+//     <Container
+//       maxWidth="sm"
+//       sx={{
+//         display: "flex",
+//         flexDirection: "column",
+//         alignItems: "center",
+//         justifyContent: "center",
+//         height: "100vh",
+//       }}
+//     >
+//       <Typography variant="h4" component="h1" gutterBottom>
+//         Login Page
+//       </Typography>
+
+//       <Box
+//         component="form"
+//         onSubmit={handleSubmit}
+//         sx={{
+//           display: "flex",
+//           flexDirection: "column",
+//           width: "100%",
+//           gap: 2,
+//         }}
+//       >
+//         <TextField
+//           label="Email"
+//           variant="outlined"
+//           fullWidth
+//           value={email}
+//           onChange={(e) => setEmail(e.target.value)}
+//           error={!!errorMessage && !email}
+//           helperText={errorMessage && !email ? "Email is required." : ""}
+//         />
+
+//         <TextField
+//           label="Password"
+//           variant="outlined"
+//           fullWidth
+//           type={showPassword ? "text" : "password"}
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//           error={!!errorMessage && !password}
+//           helperText={errorMessage && !password ? "Password is required." : ""}
+//           InputProps={{
+//             endAdornment: (
+//               <IconButton
+//                 onClick={togglePasswordVisibility}
+//                 aria-label={showPassword ? "Hide password" : "Show password"}
+//               >
+//                 {showPassword ? <VisibilityOff /> : <Visibility />}
+//               </IconButton>
+//             ),
+//           }}
+//         />
+
+//         {errorMessage && (
+//           <Typography
+//             variant="body2"
+//             color="error"
+//             sx={{ textAlign: "center" }}
+//           >
+//             {errorMessage}
+//           </Typography>
+//         )}
+
+//         <Button
+//           type="submit"
+//           variant="contained"
+//           color="primary"
+//           fullWidth
+//           disabled={isLoading}
+//         >
+//           {isLoading ? <CircularProgress size={24} /> : "Login"}
+//         </Button>
+//       </Box>
+//     </Container>
+//   );
+// };
+
+// export default LoginPage;
 
 // import React, { useState } from "react";
 // import { useNavigate } from "react-router-dom";

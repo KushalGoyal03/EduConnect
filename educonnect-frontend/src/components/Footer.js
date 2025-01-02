@@ -26,7 +26,7 @@ const Footer = ({ appName }) => {
               &copy; {new Date().getFullYear()} {appName}. All Rights Reserved.
             </Typography>
             <Typography variant="body2" color="inherit">
-              Powered by ClassSmart
+              Powered by EduConnect
             </Typography>
           </Box>
         </Container>

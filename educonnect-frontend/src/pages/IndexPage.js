@@ -25,7 +25,7 @@ const IndexPage = ({ isLoggedIn }) => {
           fontWeight: "bold",
         }}
       >
-        Welcome to ClassSmart
+        Welcome to EduConnect
       </Typography>
       <Typography
         variant="body1"

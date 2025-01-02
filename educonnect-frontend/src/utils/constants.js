@@ -1,2 +1,2 @@
 // src/utils/constants.js
-export const APP_NAME = "ClassSmart";
+export const APP_NAME = "EduConnect";
